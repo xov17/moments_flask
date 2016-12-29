@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block body %}
+
+<form action="" method="post" name="signin">
+    {{ form.hidden_tag() }}
+    Username<br>
+    {{ form.username(required='required') }}
+     {% if form.username.errors %}
+        {% for error in form.username.errors %}
+            <div class="field_error">{{ error }}</div>
+        {% endfor %}
+         {% endif %}
+    <br>Password<br>
+    {{ form.password(required='required') }}
+       {% if form.password.errors %}
+        {% for error in form.password.errors %}
+            <div class="field_error">{{ error }}</div>
+        {% endfor %} {% endif %}
+    <br>First Name<br>
+    {{ form.firstname(required='required') }}
+       {% if form.firstname.errors %}
+        {% for error in form.firstname.errors %}
+            <div class="field_error">{{ error }}</div>
+        {% endfor %} {% endif %}
+    <br>Email<br>
+    {{ form.email(required='required') }}
+       {% if form.email.errors %}
+        {% for error in form.email.errors %}
+            <div class="field_error">{{ error }}</div>
+        {% endfor %} {% endif %}
+    
+    <p><input type="submit" value="Sign Up"></p>
+
+
+
+</form>
+
+{% endblock %}
