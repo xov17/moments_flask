@@ -9,3 +9,6 @@ SECRET_KEY = 'you-will-never-guess'
 
 # Bcrypt
 BCRYPT_LOG_ROUNDS = 12
+
+# paginate
+POSTS_PER_PAGE = 3

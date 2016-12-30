@@ -1,6 +1,9 @@
 from moments import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
 
+
+
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -46,6 +49,12 @@ class User(db.Model):
         return '<User %r>' % (self.firstname)
 
 
+# master list of post and each tag
+postTags = db.Table('postTags',
+    db.Column('tag', db.String(200), db.ForeignKey('tag.tag')),
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id'))
+)
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(500))
@@ -54,3 +63,9 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post %r>' % (self.body)
+
+class Tag(db.Model):
+    tag = db.Column(db.String(200), primary_key= True)
+    posts = db.relationship('Post', secondary = postTags,
+                            backref=db.backref('postTags', lazy='dynamic'))
+

@@ -4,7 +4,8 @@ import unittest
 from datetime import datetime, timedelta
 from config import basedir
 from moments import moments, db
-from moments.models import User, Post
+from moments.models import User, Post, Tag, postTags
+from datetime import datetime, timedelta
 
 # a more complex setup could include several groups of tests each represented
 # by a untittest.TestCase subclass, and each group then would have
@@ -38,6 +39,36 @@ class TestCase(unittest.TestCase):
             print user.firstname
             print user.password
 
+    def test_tags_posts(self):
+        """
+        Tests the tags and posts relationship
+        """
+        u1 = User(username='me', email='me@gmail.com', password='123456', firstname='moa')
+        db.session.add(u1)
+        db.session.commit()
+        u = User.query.filter_by(username=u1.username).first()
+        print u
+        utcnow = datetime.utcnow()
+        post = Post(body="testing post", user_id=u.id, timestamp=utcnow+timedelta(seconds=1))
+        woo = Tag(tag="woo")
+        post2 = Post(body="testing post 2", user_id=u.id, timestamp=utcnow+timedelta(seconds=4))
+
+        woo.posts.append(post)
+        woo.posts.append(post2)
+        db.session.add(post)
+        db.session.add(woo)
+        db.session.add(post2)
+        db.session.commit()
+        wood = Tag.query.filter_by(tag="woo").first()
+        print wood
+        print wood.tag
+        print wood.posts
+        for wp in wood.posts:
+            print wp
+        #wlist = wood.posts.filter_by(postTags.c.tag == wood.tag).all()
+        #wlist = Tag.query.filter_by(tag="woo").all()
+        wlist = Post.query.join(postTags).filter(postTags.c.tag == wood.tag).order_by(Post.timestamp.desc()).all()
+        print wlist
 
 if __name__ == '__main__':
     unittest.main()
